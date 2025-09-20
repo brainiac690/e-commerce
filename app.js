@@ -7,14 +7,8 @@ const products = [
     title: "Air Force",
     price: 119,
     colors: [
-      {
-        code: "black",
-        img: "./img/air.png",
-      },
-      {
-        code: "darkblue",
-        img: "./img/air2.png",
-      },
+      { code: "black", img: "./img/air.png" },
+      { code: "darkblue", img: "./img/air2.png" },
     ],
   },
   {
@@ -22,14 +16,8 @@ const products = [
     title: "Air Jordan",
     price: 149,
     colors: [
-      {
-        code: "lightgray",
-        img: "./img/jordan.png",
-      },
-      {
-        code: "green",
-        img: "./img/jordan2.png",
-      },
+      { code: "lightgray", img: "./img/jordan.png" },
+      { code: "green", img: "./img/jordan2.png" },
     ],
   },
   {
@@ -37,14 +25,8 @@ const products = [
     title: "Blazer",
     price: 109,
     colors: [
-      {
-        code: "lightgray",
-        img: "./img/blazer.png",
-      },
-      {
-        code: "green",
-        img: "./img/blazer2.png",
-      },
+      { code: "lightgray", img: "./img/blazer.png" },
+      { code: "green", img: "./img/blazer2.png" },
     ],
   },
   {
@@ -52,14 +34,8 @@ const products = [
     title: "Crater",
     price: 129,
     colors: [
-      {
-        code: "black",
-        img: "./img/crater.png",
-      },
-      {
-        code: "lightgray",
-        img: "./img/crater2.png",
-      },
+      { code: "black", img: "./img/crater.png" },
+      { code: "lightgray", img: "./img/crater2.png" },
     ],
   },
   {
@@ -67,19 +43,13 @@ const products = [
     title: "Hippie",
     price: 99,
     colors: [
-      {
-        code: "gray",
-        img: "./img/hippie.png",
-      },
-      {
-        code: "black",
-        img: "./img/hippie2.png",
-      },
+      { code: "gray", img: "./img/hippie.png" },
+      { code: "black", img: "./img/hippie2.png" },
     ],
   },
 ];
 
-let choosenProduct = products[0];
+let chosenProduct = products[0];
 
 const currentProductImg = document.querySelector(".productImg");
 const currentProductTitle = document.querySelector(".productTitle");
@@ -89,41 +59,57 @@ const currentProductSizes = document.querySelectorAll(".size");
 
 menuItems.forEach((item, index) => {
   item.addEventListener("click", () => {
-    //change the current slide
+    // Slide
     wrapper.style.transform = `translateX(${-100 * index}vw)`;
 
-    //change the choosen product
-    choosenProduct = products[index];
+    // Change product
+    chosenProduct = products[index];
 
-    //change texts of currentProduct
-    currentProductTitle.textContent = choosenProduct.title;
-    currentProductPrice.textContent = "$" + choosenProduct.price;
-    currentProductImg.src = choosenProduct.colors[0].img;
+    // Update UI
+    currentProductTitle.textContent = chosenProduct.title;
+    currentProductPrice.textContent = "$" + chosenProduct.price;
+    currentProductImg.src = chosenProduct.colors[0].img;
 
-    //assing new colors
-    currentProductColors.forEach((color, index) => {
-      color.style.backgroundColor = choosenProduct.colors[index].code;
+    // Assign new colors safely
+    currentProductColors.forEach((color, idx) => {
+      if (chosenProduct.colors[idx]) {
+        color.style.backgroundColor = chosenProduct.colors[idx].code;
+        color.style.display = "inline-block";
+      } else {
+        color.style.display = "none"; // hide unused swatches
+      }
+    });
+
+    // Reset sizes
+    currentProductSizes.forEach((size) => {
+      size.style.backgroundColor = "white";
+      size.style.color = "black";
     });
   });
 });
 
+// Color switching
 currentProductColors.forEach((color, index) => {
   color.addEventListener("click", () => {
-    currentProductImg.src = choosenProduct.colors[index].img;
+    if (chosenProduct.colors[index]) {
+      currentProductImg.src = chosenProduct.colors[index].img;
+    }
   });
 });
 
-currentProductSizes.forEach((size, index) => {
+// Size switching
+currentProductSizes.forEach((size) => {
   size.addEventListener("click", () => {
-    currentProductSizes.forEach((size) => {
-      size.style.backgroundColor = "white";
-      size.style.color = "black";
+    currentProductSizes.forEach((s) => {
+      s.style.backgroundColor = "white";
+      s.style.color = "black";
     });
     size.style.backgroundColor = "black";
     size.style.color = "white";
   });
 });
 
+// Modal logic
 const productButton = document.querySelector(".productButton");
 const payment = document.querySelector(".payment");
 const close = document.querySelector(".close");
@@ -134,4 +120,13 @@ productButton.addEventListener("click", () => {
 
 close.addEventListener("click", () => {
   payment.style.display = "none";
+});
+
+// Close on ESC or outside click
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") payment.style.display = "none";
+});
+
+payment.addEventListener("click", (e) => {
+  if (e.target === payment) payment.style.display = "none";
 });
